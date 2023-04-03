@@ -11,3 +11,5 @@ It's not exactly fast yet. TODO:
 - [ ] Use 2D grid-based hashing instead of kd-tree for neighborhood lookup
 - [ ] Use SIMD vectorization
 - [ ] port to GPU
+- [ ] build and export Python wheels
+- [ ] support CMake for building
