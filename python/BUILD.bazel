@@ -1,4 +1,4 @@
-load("@rules_python//python:defs.bzl", "py_binary")
+load("@rules_python//python:defs.bzl", "py_binary", "py_test")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("@pypi//:requirements.bzl", "requirement")
 
@@ -22,5 +22,18 @@ py_binary(
     deps = [
         requirement("scikit-learn"),
         requirement("numpy"),
+    ],
+)
+
+py_test(
+    name = "dbscan_test",
+    timeout = "short",
+    srcs = ["dbscan_test.py"],
+    data = [
+        "//cpp:dbscan_cpp.so",
+    ],
+    deps = [
+        requirement("scikit-learn"),
+        requirement("pytest"),
     ],
 )
