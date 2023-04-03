@@ -6,6 +6,6 @@ import %workspace%/.aspect/bazelrc/debug.bazelrc
 import %workspace%/.aspect/bazelrc/performance.bazelrc
 
 build --cxxopt=-std=c++17
-build --cxxopt=-O2
+build -c opt
 
 try-import %workspace%/user.bazelrc
