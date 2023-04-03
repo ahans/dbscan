@@ -1,0 +1,26 @@
+load("@rules_python//python:defs.bzl", "py_binary")
+load("@rules_python//python:pip.bzl", "compile_pip_requirements")
+load("@pypi//:requirements.bzl", "requirement")
+
+compile_pip_requirements(
+    name = "requirements",
+    timeout = "moderate",
+    extra_args = [
+        "--allow-unsafe",
+        "-v",
+    ],
+    requirements_in = "requirements.in",
+    requirements_txt = "requirements_lock.txt",
+)
+
+py_binary(
+    name = "demo",
+    srcs = ["demo.py"],
+    data = [
+        "//cpp:dbscan_cpp.so",
+    ],
+    deps = [
+        requirement("scikit-learn"),
+        requirement("numpy"),
+    ],
+)
