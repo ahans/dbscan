@@ -17,7 +17,7 @@ py_binary(
     name = "demo",
     srcs = ["demo.py"],
     data = [
-        "//cpp:dbscan_cpp.so",
+        "//cpp:py_dbscan.so",
     ],
     deps = [
         requirement("scikit-learn"),
@@ -30,7 +30,7 @@ py_test(
     timeout = "short",
     srcs = ["dbscan_test.py"],
     data = [
-        "//cpp:dbscan_cpp.so",
+        "//cpp:py_dbscan.so",
     ],
     deps = [
         requirement("scikit-learn"),
