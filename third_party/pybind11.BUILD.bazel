@@ -1,0 +1,9 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "pybind11",
+    hdrs = glob(["include/pybind11/**/*.h"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = ["@dbscan_python//:python_headers"],
+)
