@@ -1,10 +1,27 @@
 load("@pybind11_bazel//:build_defs.bzl", "pybind_extension")
+load("@rules_cc//cc:defs.bzl", "cc_library")
 
-pybind_extension(
-    name = "dbscan_cpp",
+cc_library(
+    name = "scoped_timer",
+    hdrs = ["scoped_timer.hpp"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "dbscan",
     srcs = ["dbscan.cpp"],
+    hdrs = ["dbscan.hpp"],
     visibility = ["//visibility:public"],
     deps = [
         "@nanoflann",
+    ],
+)
+
+pybind_extension(
+    name = "py_dbscan",
+    srcs = ["py_dbscan.cpp"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":dbscan",
     ],
 )
