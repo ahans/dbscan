@@ -77,3 +77,13 @@ http_archive(
         "https://github.com/jlblancoc/nanoflann/archive/refs/tags/v1.4.3.tar.gz",
     ],
 )
+
+http_archive(
+    name = "nanobench",
+    build_file = "@//third_party:nanobench.BUILD.bazel",
+    sha256 = "53a5a913fa695c23546661bf2cd22b299e10a3e994d9ed97daf89b5cada0da70",
+    strip_prefix = "nanobench-4.3.11",
+    urls = [
+        "https://github.com/martinus/nanobench/archive/refs/tags/v4.3.11.tar.gz",
+    ],
+)

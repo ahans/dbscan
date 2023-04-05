@@ -14,8 +14,8 @@ compile_pip_requirements(
 )
 
 py_binary(
-    name = "demo",
-    srcs = ["demo.py"],
+    name = "benchmark",
+    srcs = ["benchmark.py"],
     data = [
         "//cpp:py_dbscan.so",
     ],

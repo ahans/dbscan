@@ -25,3 +25,12 @@ pybind_extension(
         ":dbscan",
     ],
 )
+
+cc_binary(
+    name = "benchmark",
+    srcs = ["benchmark.cpp"],
+    deps = [
+        ":dbscan",
+        "@nanobench",
+    ],
+)
