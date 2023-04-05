@@ -1,5 +1,4 @@
-load("@pybind11_bazel//:build_defs.bzl", "pybind_extension")
-load("@rules_cc//cc:defs.bzl", "cc_library")
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 
 cc_library(
     name = "scoped_timer",
@@ -17,12 +16,14 @@ cc_library(
     ],
 )
 
-pybind_extension(
-    name = "py_dbscan",
+cc_binary(
+    name = "py_dbscan.so",
     srcs = ["py_dbscan.cpp"],
+    linkshared = True,
     visibility = ["//visibility:public"],
     deps = [
         ":dbscan",
+        "@pybind11",
     ],
 )
 
