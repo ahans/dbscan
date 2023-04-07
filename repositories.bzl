@@ -42,3 +42,11 @@ def dbscan_dependencies():
         strip_prefix = "pybind11-2.10.4",
         urls = ["https://github.com/pybind/pybind11/archive/refs/tags/v2.10.4.tar.gz"],
     )
+
+    maybe(
+        http_archive,
+        name = "doctest",
+        url = "https://github.com/doctest/doctest/archive/refs/tags/v2.4.11.tar.gz",
+        strip_prefix = "doctest-2.4.11",
+        sha256 = "632ed2c05a7f53fa961381497bf8069093f0d6628c5f26286161fbd32a560186",
+    )
