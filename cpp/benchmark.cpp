@@ -53,24 +53,24 @@ auto gen_points()
 
 int main(int argc, char** argv)
 {
-    if (argc < 2 || std::string{argv[1]} == "--help") {
-        std::cerr << "usage: " << argv[0] << " FILE" << std::endl;
-        std::cerr << "where FILE is a text file with 2-D points, one point per line" << std::endl;
-        return 1;
-    }
-    std::string const filename{argv[1]};
-    if (!std::filesystem::exists(filename)) {
-        std::cerr << "file doesn't exist: " << filename << std::endl;
-        return 1;
-    }
-    auto const points{read_points(filename)};
-    // auto labels_and_points{gen_points()};
-    // std::vector<dbscan::Dbscan::Point> points{};
-    // points.reserve(std::size(labels_and_points));
-    // for (auto const& lp : labels_and_points) {
-    //     points.push_back(lp.second);
+    // if (argc < 2 || std::string{argv[1]} == "--help") {
+    //     std::cerr << "usage: " << argv[0] << " FILE" << std::endl;
+    //     std::cerr << "where FILE is a text file with 2-D points, one point per line" << std::endl;
+    //     return 1;
     // }
-    // std::cout << "have " << std::size(points) << " points" << std::endl;
+    // std::string const filename{argv[1]};
+    // if (!std::filesystem::exists(filename)) {
+    //     std::cerr << "file doesn't exist: " << filename << std::endl;
+    //     return 1;
+    // }
+    // auto const points{read_points(filename)};
+    auto labels_and_points{gen_points()};
+    std::vector<dbscan::Dbscan::Point> points{};
+    points.reserve(std::size(labels_and_points));
+    for (auto const& lp : labels_and_points) {
+        points.push_back(lp.second);
+    }
+    std::cout << "have " << std::size(points) << " points" << std::endl;
     dbscan::Dbscan dbscan{0.8, 10, std::size(points)};
     ankerl::nanobench::Bench().run("fit_predict", [&dbscan, &points] {
         auto labels{dbscan.fit_predict(points)};
