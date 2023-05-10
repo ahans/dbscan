@@ -50,12 +50,20 @@ TEST_CASE("basic synthetic data test")
     auto const labels = dbscan.fit_predict(points);
     std::cout << "took " << (timer.elapsed_ns() / 1000) << " µs" << std::endl;
 
+    std::unordered_map<dbscan::Dbscan::Label, size_t> counts{};
+    for (auto label : labels) counts[label]++;
+    // for (auto [key, count] : counts) {
+    //     std::cout << key << ": " << count << std::endl;
+    // }
+
     auto num_above_threshold{0};
     constexpr double threshold{0.9};
     for (auto label{0}; label < num_clusters; ++label) {
         std::unordered_map<int, int> label_count;
         for (auto point_index : label_index_map[label]) {
-            label_count[labels[point_index]] += 1;
+            if (labels[point_index] >= 0) {
+                label_count[labels[point_index]] += 1;
+            }
         }
         int total_points{};
         int max_points{0};
@@ -63,6 +71,7 @@ TEST_CASE("basic synthetic data test")
             total_points += count;
             max_points = std::max(max_points, count);
         }
+        REQUIRE(total_points > 0);
         auto ratio = static_cast<double>(max_points) / static_cast<double>(total_points);
         CHECK(ratio > 0.7);
         if (ratio > threshold) {

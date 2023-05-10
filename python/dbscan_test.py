@@ -10,6 +10,8 @@ from cpp import py_dbscan
 def test_moon():
     """Basic test using two moons sample."""
     X, y = datasets.make_moons(n_samples=1000)
+
+    # np.random.shuffle(X)
     dbscan = py_dbscan.DBSCAN(0.05, 10)
     y_pred = dbscan.fit_predict(X)
 
