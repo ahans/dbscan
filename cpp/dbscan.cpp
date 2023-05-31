@@ -55,6 +55,7 @@ auto Dbscan::fit_predict(std::vector<Dbscan::Point> const& points) -> std::vecto
         auto const index = bin_y * num_bins_x + bin_x;
         counts[index] += 1;
     }
+
     std::vector<std::uint32_t> offsets{};
     offsets.reserve(std::size(counts));
     std::exclusive_scan(std::cbegin(counts), std::cend(counts), std::back_inserter(offsets), 0);
@@ -83,8 +84,8 @@ auto Dbscan::fit_predict(std::vector<Dbscan::Point> const& points) -> std::vecto
     auto radius_search = [&](std::uint32_t pt_index) -> std::uint32_t {
         neighbors.clear();
         auto const& pt = new_points[pt_index];
-        auto const bin_x = static_cast<std::uint32_t>(std::floor((pt[0] - min[0]) / eps));
-        auto const bin_y = static_cast<std::uint32_t>(std::floor((pt[1] - min[1]) / eps));
+        auto const bin_x = static_cast<std::int32_t>(std::floor((pt[0] - min[0]) / eps));
+        auto const bin_y = static_cast<std::int32_t>(std::floor((pt[1] - min[1]) / eps));
         for (auto neighbor_bin_y = bin_y - 1; neighbor_bin_y <= bin_y + 1; ++neighbor_bin_y) {
             for (auto neighbor_bin_x = bin_x - 1; neighbor_bin_x <= bin_x + 1; ++neighbor_bin_x) {
                 if (neighbor_bin_x < 0 || neighbor_bin_x >= num_bins_x || neighbor_bin_y < 0 ||
