@@ -70,10 +70,14 @@ int main(int argc, char** argv)
     for (auto const& lp : labels_and_points) {
         points.push_back(lp.second);
     }
+    std::ofstream out{"/home/ahans/src/dbscan/2d.txt"};
+    for (auto const& p : points) {
+        out << p[0] << "," << p[1] << std::endl;
+    }
     std::cout << "have " << std::size(points) << " points" << std::endl;
-    dbscan::Dbscan dbscan{0.8, 10, std::size(points)};
-    ankerl::nanobench::Bench().run("fit_predict", [&dbscan, &points] {
-        auto labels{dbscan.fit_predict(points)};
-        ankerl::nanobench::doNotOptimizeAway(labels);
-    });
+    // dbscan::Dbscan dbscan{0.8, 10, std::size(points)};
+    // ankerl::nanobench::Bench().run("fit_predict", [&dbscan, &points] {
+    //     auto labels{dbscan.fit_predict(points)};
+    //     ankerl::nanobench::doNotOptimizeAway(labels);
+    // });
 }

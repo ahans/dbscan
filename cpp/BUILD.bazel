@@ -10,6 +10,10 @@ cc_library(
     name = "dbscan",
     srcs = ["dbscan.cpp"],
     hdrs = ["dbscan.hpp"],
+    copts = [
+        "-fopenmp",
+    ],
+    linkopts = ["-fopenmp"],
     visibility = ["//visibility:public"],
     deps = [
         "@nanoflann",
