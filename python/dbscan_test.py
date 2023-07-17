@@ -58,10 +58,7 @@ def test_blobs():
 
     dbscan = py_dbscan.DBSCAN(0.5, 20)
     y_pred = dbscan.fit_predict(X)
-    num_classes = np.array(
-        [np.count_nonzero(y_pred == label) for label in range(n_blobs)]
-    )
-    assert np.all(num_classes == 500)
+    assert all(np.count_nonzero(y_pred == label) == 500 for label in range(n_blobs))
 
 
 if __name__ == "__main__":
