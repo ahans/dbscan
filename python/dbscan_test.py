@@ -1,4 +1,5 @@
 """Tests of DBSCAN C++ modules from Python."""
+import sys
 
 import numpy as np
 import pytest
@@ -63,4 +64,5 @@ def test_blobs():
     assert np.all(num_classes == 500)
 
 
-pytest.main([__file__, "-rP"])
+if __name__ == "__main__":
+    sys.exit(pytest.main([__file__, "-rP"]))
