@@ -35,8 +35,8 @@ def get_test_cases():
         Test(
             "blobs",
             X=datasets.make_blobs(
-                n_samples=20_000,
-                centers=100.0 * rng.random((100, 2)),
+                n_samples=100_000,
+                centers=100.0 * rng.random((200, 2)),
                 cluster_std=0.1,
                 random_state=42,
             )[0],
@@ -48,16 +48,24 @@ def get_test_cases():
 
 def benchmark():
     """Run benchmark."""
+    n_trials = 10
     for test in get_test_cases():
         print(f"Test: {test.name}")
         for name, algorithm in [
-            ("sklearn", cluster.DBSCAN(eps=test.eps, min_samples=test.min_samples)),
+            (
+                "sklearn",
+                cluster.DBSCAN(
+                    eps=test.eps, min_samples=test.min_samples, algorithm="ball_tree"
+                ),
+            ),
             ("cpp", py_dbscan.DBSCAN(test.eps, test.min_samples)),
         ]:
             runtime = timeit.timeit(
-                "y_pred = algorithm.fit_predict(test.X)", number=200, globals=locals()
+                "y_pred = algorithm.fit_predict(test.X)",
+                number=n_trials,
+                globals=locals(),
             )
-            print(f"    {name:8}: {(runtime * 1000):>8.2f} ms")
+            print(f"    {name:8}: {(runtime / n_trials * 1000):>8.2f} ms")
 
 
 if __name__ == "__main__":
