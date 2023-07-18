@@ -55,7 +55,7 @@ def benchmark():
             ("cpp", py_dbscan.DBSCAN(test.eps, test.min_samples)),
         ]:
             runtime = timeit.timeit(
-                "y_pred = algorithm.fit_predict(test.X)", number=10, globals=locals()
+                "y_pred = algorithm.fit_predict(test.X)", number=200, globals=locals()
             )
             print(f"    {name:8}: {(runtime * 1000):>8.2f} ms")
 

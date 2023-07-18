@@ -6,6 +6,12 @@
 
 namespace dbscan {
 
+template <typename T>
+inline T square(T const v)
+{
+    return v * v;
+}
+
 class Dbscan
 {
 public:
@@ -20,6 +26,7 @@ public:
     [[nodiscard]] std::vector<Label> fit_predict(std::vector<Point> const& points);
 
 private:
+    float eps_;
     float eps_squared_;
     std::uint32_t min_samples_;
 
@@ -28,6 +35,8 @@ private:
     std::vector<std::pair<std::uint32_t, float>> neighbors_;
     std::vector<bool> visited_;
     std::vector<std::uint32_t> to_visit_;
+    std::vector<std::uint32_t> counts_;
+    std::vector<std::uint32_t> offsets_{};
 };
 
 }  // namespace dbscan

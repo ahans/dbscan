@@ -14,17 +14,6 @@ def dbscan_dependencies():
 
     maybe(
         http_archive,
-        name = "nanoflann",
-        build_file = "@dbscan//third_party:nanoflann.BUILD.bazel",
-        sha256 = "cbcecf22bec528a8673a113ee9b0e134f91f1f96be57e913fa1f74e98e4449fa",
-        strip_prefix = "nanoflann-1.4.3",
-        urls = [
-            "https://github.com/jlblancoc/nanoflann/archive/refs/tags/v1.4.3.tar.gz",
-        ],
-    )
-
-    maybe(
-        http_archive,
         name = "nanobench",
         build_file = "@dbscan//third_party:nanobench.BUILD.bazel",
         sha256 = "53a5a913fa695c23546661bf2cd22b299e10a3e994d9ed97daf89b5cada0da70",
