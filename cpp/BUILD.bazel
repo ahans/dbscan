@@ -1,3 +1,4 @@
+load("@pybind11_bazel//:build_defs.bzl", "pybind_extension")
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 
 cc_library(
@@ -15,14 +16,12 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
-cc_binary(
-    name = "py_dbscan.so",
+pybind_extension(
+    name = "py_dbscan",
     srcs = ["py_dbscan.cpp"],
-    linkshared = True,
     visibility = ["//visibility:public"],
     deps = [
         ":dbscan",
-        "@pybind11",
     ],
 )
 

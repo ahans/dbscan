@@ -5,6 +5,8 @@ import %workspace%/.aspect/bazelrc/correctness.bazelrc
 import %workspace%/.aspect/bazelrc/debug.bazelrc
 import %workspace%/.aspect/bazelrc/performance.bazelrc
 
+common --enable_bzlmod
+
 build --cxxopt=-std=c++17
 build -c opt
 
