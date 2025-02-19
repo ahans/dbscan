@@ -1,0 +1,33 @@
+module(name = "dbscan")
+
+bazel_dep(name = "aspect_bazel_lib", version = "2.13.0")
+bazel_dep(name = "platforms", version = "0.0.11")
+bazel_dep(name = "pybind11_bazel", version = "2.13.6")
+bazel_dep(name = "rules_cc", version = "0.1.1")
+bazel_dep(name = "rules_python", version = "1.2.0-rc0")
+
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "nanobench",
+    build_file = "@dbscan//third_party:nanobench.BUILD.bazel",
+    sha256 = "53a5a913fa695c23546661bf2cd22b299e10a3e994d9ed97daf89b5cada0da70",
+    strip_prefix = "nanobench-4.3.11",
+    urls = [
+        "https://github.com/martinus/nanobench/archive/refs/tags/v4.3.11.tar.gz",
+    ],
+)
+
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    is_default = True,
+    python_version = "3.10",
+)
+
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+    hub_name = "pypi",
+    python_version = "3.10",
+    requirements_lock = "//python:requirements_lock.txt",
+)
+use_repo(pip, "pypi")
