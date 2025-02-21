@@ -25,6 +25,15 @@ pybind_extension(
     ],
 )
 
+py_library(
+    name = "py_dbscan_lib",
+    data = [
+        ":py_dbscan",
+    ],
+    imports = ["."],
+    visibility = ["//visibility:public"],
+)
+
 cc_binary(
     name = "benchmark",
     srcs = ["benchmark.cpp"],
