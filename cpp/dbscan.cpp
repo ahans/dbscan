@@ -52,8 +52,12 @@ auto Dbscan::fit_predict(std::vector<Dbscan::Point> const& points) -> std::vecto
 
     // FIRST PASS OVER THE POINTS
     for (auto const& pt : points) {
-        auto const bin_x{static_cast<std::uint32_t>(std::floor((pt[0] - min[0]) / eps_))};
-        auto const bin_y{static_cast<std::uint32_t>(std::floor((pt[1] - min[1]) / eps_))};
+        auto bin_x{static_cast<std::uint32_t>(std::floor((pt[0] - min[0]) / eps_))};
+        auto bin_y{static_cast<std::uint32_t>(std::floor((pt[1] - min[1]) / eps_))};
+
+        bin_x = bin_x < num_bins_x  ? bin_x : num_bins_x - 1;
+        bin_y = bin_y < num_bins_y  ? bin_y : num_bins_y - 1;
+
         auto const index{bin_y * num_bins_x + bin_x};
         counts_[index] += 1;
     }
@@ -68,9 +72,13 @@ auto Dbscan::fit_predict(std::vector<Dbscan::Point> const& points) -> std::vecto
     std::vector<std::uint32_t> new_point_to_point_index_map(std::size(points));
     std::uint32_t i{0};
     for (auto const& pt : points) {
-        auto const bin_x{static_cast<std::uint32_t>(std::floor((pt[0] - min[0]) / eps_))};
-        auto const bin_y{static_cast<std::uint32_t>(std::floor((pt[1] - min[1]) / eps_))};
+        auto bin_x{static_cast<std::uint32_t>(std::floor((pt[0] - min[0]) / eps_))};
+        auto bin_y{static_cast<std::uint32_t>(std::floor((pt[1] - min[1]) / eps_))};
+
+        bin_x = bin_x < num_bins_x  ? bin_x : num_bins_x - 1;
+        bin_y = bin_y < num_bins_y  ? bin_y : num_bins_y - 1;
         auto const index{bin_y * num_bins_x + bin_x};
+
         auto const new_pt_index{scratch[index]};
         scratch[index] += 1;
         new_points[new_pt_index] = pt;
@@ -86,8 +94,11 @@ auto Dbscan::fit_predict(std::vector<Dbscan::Point> const& points) -> std::vecto
 #pragma omp parallel for
     for (auto i = 0UL; i < std::size(new_points); ++i) {
         auto const pt{new_points[i]};
-        auto const bin_x{static_cast<std::int32_t>(std::floor((pt[0] - min[0]) / eps_))};
-        auto const bin_y{static_cast<std::int32_t>(std::floor((pt[1] - min[1]) / eps_))};
+        auto bin_x{static_cast<std::int32_t>(std::floor((pt[0] - min[0]) / eps_))};
+        auto bin_y{static_cast<std::int32_t>(std::floor((pt[1] - min[1]) / eps_))};
+
+        bin_x = bin_x < static_cast<std::int32_t>(num_bins_x)  ? bin_x : num_bins_x - 1;
+        bin_y = bin_y < static_cast<std::int32_t>(num_bins_y)  ? bin_y : num_bins_y - 1;
 
         std::vector<std::uint32_t> local_neighbors;
 
