@@ -4,7 +4,6 @@
 #include <numeric>
 #include <climits>
 #include <unordered_map>
-#include <iostream>
 
 namespace dbscan {
 
@@ -54,8 +53,8 @@ auto Dbscan::fit_predict(std::vector<Dbscan::Point> const& points) -> std::vecto
 
     // FIRST PASS OVER THE POINTS
     for (auto const& pt : points) {
-        auto bin_x{static_cast<std::uint32_t>(std::floor((pt[0] - min[0]) / eps_))};
-        auto bin_y{static_cast<std::uint32_t>(std::floor((pt[1] - min[1]) / eps_))};
+        auto const bin_x{static_cast<std::uint32_t>(std::floor((pt[0] - min[0]) / eps_))};
+        auto const bin_y{static_cast<std::uint32_t>(std::floor((pt[1] - min[1]) / eps_))};
         auto const index{bin_y * num_bins_x + bin_x};
         counts_[index] += 1;
     }
