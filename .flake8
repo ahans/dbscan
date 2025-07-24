@@ -1,6 +1,6 @@
 [flake8]
 max-line-length: 120
-extend-ignore = E203, E501
+extend-ignore = E203, E231, E501
 exclude =
     bazel-bin,
     bazel-dbscan,
