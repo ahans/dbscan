@@ -72,6 +72,5 @@ def test_points_on_border():
     np.testing.assert_array_equal(y_pred, np.array([-1, -1]))
 
 
-
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-rP"]))
