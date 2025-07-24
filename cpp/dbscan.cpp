@@ -44,8 +44,9 @@ auto Dbscan::fit_predict(std::vector<Dbscan::Point> const& points) -> std::vecto
     // derive num_bins out of it
     float const range_x{max[0] - min[0]};
     float const range_y{max[1] - min[1]};
-    auto const num_bins_x{static_cast<std::uint32_t>(std::ceil(range_x / eps_))};
-    auto const num_bins_y{static_cast<std::uint32_t>(std::ceil(range_y / eps_))};
+    // add 1e-7 to handle the case where range is exactly divisible by eps_
+    auto const num_bins_x{static_cast<std::uint32_t>(std::ceil((range_x + 1e-7f) / eps_))};
+    auto const num_bins_y{static_cast<std::uint32_t>(std::ceil((range_y + 1e-7f) / eps_))};
 
     // count number of points in every bin
     counts_.assign(num_bins_x * num_bins_y, 0);

@@ -61,5 +61,16 @@ def test_blobs():
     assert all(np.count_nonzero(y_pred == label) == 500 for label in range(n_blobs))
 
 
+def test_points_on_border():
+    """Test using two points on the border with an eps which divides (point - min_point) without remainder."""
+    X = np.array([[0, 0], [1, 1]])
+
+    dbscan = py_dbscan.DBSCAN(0.5, 2)
+    y_pred = dbscan.fit_predict(X)
+
+    assert y_pred.shape[0] == 2
+    np.testing.assert_equal(y_pred, np.array([-1, -1]))
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-rP"]))
