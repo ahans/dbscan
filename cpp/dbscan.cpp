@@ -4,6 +4,7 @@
 #include <numeric>
 #include <climits>
 #include <unordered_map>
+#include <iostream>
 
 namespace dbscan {
 
@@ -44,8 +45,9 @@ auto Dbscan::fit_predict(std::vector<Dbscan::Point> const& points) -> std::vecto
     // derive num_bins out of it
     float const range_x{max[0] - min[0]};
     float const range_y{max[1] - min[1]};
-    auto const num_bins_x{static_cast<std::uint32_t>(std::ceil(range_x / eps_))};
-    auto const num_bins_y{static_cast<std::uint32_t>(std::ceil(range_y / eps_))};
+    // add 1e-7 to handle the case where range is exactly divisible by eps_
+    auto const num_bins_x{static_cast<std::uint32_t>(std::ceil((range_x + 1e-7f) / eps_))};
+    auto const num_bins_y{static_cast<std::uint32_t>(std::ceil((range_y + 1e-7f) / eps_))};
 
     // count number of points in every bin
     counts_.assign(num_bins_x * num_bins_y, 0);
@@ -54,10 +56,6 @@ auto Dbscan::fit_predict(std::vector<Dbscan::Point> const& points) -> std::vecto
     for (auto const& pt : points) {
         auto bin_x{static_cast<std::uint32_t>(std::floor((pt[0] - min[0]) / eps_))};
         auto bin_y{static_cast<std::uint32_t>(std::floor((pt[1] - min[1]) / eps_))};
-
-        bin_x = bin_x < num_bins_x  ? bin_x : num_bins_x - 1;
-        bin_y = bin_y < num_bins_y  ? bin_y : num_bins_y - 1;
-
         auto const index{bin_y * num_bins_x + bin_x};
         counts_[index] += 1;
     }
@@ -72,13 +70,9 @@ auto Dbscan::fit_predict(std::vector<Dbscan::Point> const& points) -> std::vecto
     std::vector<std::uint32_t> new_point_to_point_index_map(std::size(points));
     std::uint32_t i{0};
     for (auto const& pt : points) {
-        auto bin_x{static_cast<std::uint32_t>(std::floor((pt[0] - min[0]) / eps_))};
-        auto bin_y{static_cast<std::uint32_t>(std::floor((pt[1] - min[1]) / eps_))};
-
-        bin_x = bin_x < num_bins_x  ? bin_x : num_bins_x - 1;
-        bin_y = bin_y < num_bins_y  ? bin_y : num_bins_y - 1;
+        auto const bin_x{static_cast<std::uint32_t>(std::floor((pt[0] - min[0]) / eps_))};
+        auto const bin_y{static_cast<std::uint32_t>(std::floor((pt[1] - min[1]) / eps_))};
         auto const index{bin_y * num_bins_x + bin_x};
-
         auto const new_pt_index{scratch[index]};
         scratch[index] += 1;
         new_points[new_pt_index] = pt;
@@ -94,11 +88,8 @@ auto Dbscan::fit_predict(std::vector<Dbscan::Point> const& points) -> std::vecto
 #pragma omp parallel for
     for (auto i = 0UL; i < std::size(new_points); ++i) {
         auto const pt{new_points[i]};
-        auto bin_x{static_cast<std::int32_t>(std::floor((pt[0] - min[0]) / eps_))};
-        auto bin_y{static_cast<std::int32_t>(std::floor((pt[1] - min[1]) / eps_))};
-
-        bin_x = bin_x < static_cast<std::int32_t>(num_bins_x)  ? bin_x : num_bins_x - 1;
-        bin_y = bin_y < static_cast<std::int32_t>(num_bins_y)  ? bin_y : num_bins_y - 1;
+        auto const bin_x{static_cast<std::int32_t>(std::floor((pt[0] - min[0]) / eps_))};
+        auto const bin_y{static_cast<std::int32_t>(std::floor((pt[1] - min[1]) / eps_))};
 
         std::vector<std::uint32_t> local_neighbors;
 
