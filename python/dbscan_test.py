@@ -72,5 +72,24 @@ def test_points_on_border():
     np.testing.assert_equal(y_pred, np.array([-1, -1]))
 
 
+def test_min_points():
+    X = np.array([
+        [1.0, 1.0], [1.1, 1.0],   # cluster 1
+        [5.0, 5.0], [5.1, 5.0],   # cluster 2
+        [20, 20], # noise
+    ]
+    )
+
+    dbscan = py_dbscan.DBSCAN(1.0, 2)
+    y_pred = dbscan.fit_predict(X)
+
+    print(y_pred)
+
+    assert y_pred.shape[0] == 2
+    assert y_pred[0] == y_pred[1] # cluster 1
+    assert y_pred[2] == y_pred[3] # cluster 2
+    assert y_pred[4] == -1 # noise
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-rP"]))
