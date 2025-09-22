@@ -83,9 +83,7 @@ def test_min_points():
     dbscan = py_dbscan.DBSCAN(1.0, 2)
     y_pred = dbscan.fit_predict(X)
 
-    print(y_pred)
-
-    assert y_pred.shape[0] == 2
+    assert y_pred.shape[0] == 5
     assert y_pred[0] == y_pred[1] # cluster 1
     assert y_pred[2] == y_pred[3] # cluster 2
     assert y_pred[4] == -1 # noise
