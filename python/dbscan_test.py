@@ -72,5 +72,42 @@ def test_points_on_border():
     np.testing.assert_equal(y_pred, np.array([-1, -1]))
 
 
+def test_points_on_border2():
+    """Another test with points on the edge of the eps grid."""
+    X = np.array(
+        [
+            [1.0000000e01, -2.5000000e-01],
+            [1.0000000e01, -2.0000000e-01],
+            [1.0000000e01, -1.5000001e-01],
+            [1.0000000e01, -1.0000000e-01],
+            [1.0000000e01, -5.0000001e-02],
+            [1.0000000e01, -1.3877788e-17],
+            [1.0000000e01, 5.0000001e-02],
+            [1.0000000e01, 1.0000000e-01],
+            [1.0000000e01, 1.5000001e-01],
+            [1.0000000e01, 2.0000000e-01],
+            [1.5000000e01, -2.5000000e-01],
+            [1.5000000e01, -2.0000000e-01],
+            [1.5000000e01, -1.5000001e-01],
+            [1.5000000e01, -1.0000000e-01],
+            [1.5000000e01, -5.0000001e-02],
+            [1.5000000e01, -1.3877788e-17],
+            [1.5000000e01, 5.0000001e-02],
+            [1.5000000e01, 1.0000000e-01],
+            [1.5000000e01, 1.5000001e-01],
+            [1.5000000e01, 2.0000000e-01],
+        ]
+    )
+
+    dbscan = py_dbscan.DBSCAN(0.5, 2)
+    y_pred = dbscan.fit_predict(X)
+
+    label_a = y_pred[0]
+    label_b = y_pred[10]
+    assert label_a != label_b
+    assert np.all(y_pred[:10] == label_a)
+    assert np.all(y_pred[10:] == label_b)
+
+
 if __name__ == "__main__":
-    sys.exit(pytest.main([__file__, "-rP"]))
+    sys.exit(pytest.main([__file__, "-rP"] + sys.argv[1:]))
