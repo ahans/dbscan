@@ -45,16 +45,17 @@ auto Dbscan::fit_predict(std::vector<Dbscan::Point> const& points) -> std::vecto
     float const range_x{max[0] - min[0]};
     float const range_y{max[1] - min[1]};
     // add 1e-7 to handle the case where range is exactly divisible by eps_
-    auto const num_bins_x{static_cast<std::uint32_t>(std::ceil((range_x + 1e-7f) / eps_))};
-    auto const num_bins_y{static_cast<std::uint32_t>(std::ceil((range_y + 1e-7f) / eps_))};
+    auto const num_bins_x{static_cast<std::uint32_t>(std::ceil((range_x + eps_ / 2) / eps_))};
+    auto const num_bins_y{static_cast<std::uint32_t>(std::ceil((range_y + eps_ / 2) / eps_))};
 
     // count number of points in every bin
     counts_.assign(num_bins_x * num_bins_y, 0);
 
     // FIRST PASS OVER THE POINTS
     for (auto const& pt : points) {
-        auto const bin_x{static_cast<std::uint32_t>(std::floor((pt[0] - min[0]) / eps_))};
-        auto const bin_y{static_cast<std::uint32_t>(std::floor((pt[1] - min[1]) / eps_))};
+        auto const bin_x{std::min(static_cast<std::uint32_t>(std::floor((pt[0] - min[0]) / eps_)), num_bins_x - 1)};
+        auto const bin_y{std::min(static_cast<std::uint32_t>(std::floor((pt[1] - min[1]) / eps_)), num_bins_y - 1)};
+
         auto const index{bin_y * num_bins_x + bin_x};
         counts_[index] += 1;
     }
