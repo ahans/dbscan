@@ -1,4 +1,5 @@
 """Tests of DBSCAN C++ modules from Python."""
+
 import sys
 
 import numpy as np
