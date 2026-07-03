@@ -110,5 +110,27 @@ def test_points_on_border2():
     assert np.all(y_pred[10:] == label_b)
 
 
+def test_three_point_cluster_with_single_core_point():
+    """Test the case where we have a single cluster with min_samples points and only the center point is a core point."""
+    X = np.array(
+        [
+            [-1, 0],
+            [0.0, 0],
+            [1, 0],
+            [3, 3],  # noise
+            [2.5, 2.5],  # noise
+        ]
+    )
+
+    eps = 1.01
+    min_samples = 3
+
+    dbscan = py_dbscan.DBSCAN(eps, min_samples)
+
+    y_pred = dbscan.fit_predict(X)
+    assert np.all(y_pred[:3] == 0)
+    assert np.all(y_pred[3:] == -1)
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-rP"] + sys.argv[1:]))

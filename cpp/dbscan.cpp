@@ -111,14 +111,23 @@ auto Dbscan::fit_predict(std::vector<Dbscan::Point> const& points) -> std::vecto
                     continue;
                 }
                 auto const& neighbor_pt{new_points[neighbor_pt_index]};
-                if ((square(neighbor_pt[0] - pt[0]) + square(neighbor_pt[1] - pt[1])) < eps_squared_) {
+                auto const dist_squared{(square(neighbor_pt[0] - pt[0]) + square(neighbor_pt[1] - pt[1]))};
+                if (dist_squared < eps_squared_) {
                     local_neighbors.push_back(neighbor_pt_index);
                 }
             }
         }
 
-        if (std::size(local_neighbors) > min_samples_) {
+        if (std::size(local_neighbors) + 1 >= min_samples_) {
+            // assign first slot of core point entries to itself: this is safe to do without a lock because no other
+            // thread will process the current point i
+            core_points_ids[i][0] = i;
             for (auto const n : local_neighbors) {
+                // TODO: there's the unlikely chance of two threads, working on different points, considering the same
+                // neighbor `n` at the same time, finding that the first slot is empty at the same time, and then both
+                // trying to write their id to that slot, which leads to UB in C++; at least for x86_64 this is probably
+                // fine, since writes of ints are atomic on the hardware level, but it's obviously not clean and should
+                // be done differently.
                 auto& cps{core_points_ids[n]};
                 for (auto cp_id{0U}; cp_id < num_core_points_entries; ++cp_id) {
                     if (cps[cp_id] == -1) {
