@@ -112,7 +112,7 @@ auto Dbscan::fit_predict(std::vector<Dbscan::Point> const& points) -> std::vecto
                 }
                 auto const& neighbor_pt{new_points[neighbor_pt_index]};
                 auto const dist_squared{(square(neighbor_pt[0] - pt[0]) + square(neighbor_pt[1] - pt[1]))};
-                if (dist_squared < eps_squared_) {
+                if (dist_squared <= eps_squared_) {
                     local_neighbors.push_back(neighbor_pt_index);
                 }
             }
